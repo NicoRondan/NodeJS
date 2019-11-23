@@ -1,0 +1,120 @@
+
+    <head>
+        <title>
+            SocketIO-MEAN chat
+        </title>
+        <style>
+            
+            #chatWrap{
+                float: left;
+            }
+            #chat{
+                position: relative;
+                width: 100%;
+                float:left;
+                min-height:100px;
+                height: 90%;
+                overflow: auto;
+            }
+        </style>
+        
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        
+    </head>
+
+        
+        <div >
+            
+            <div class="page-header">
+                <h1>Room chat </h1>
+            </div>
+            
+              
+            
+            <div id="contentWrap" class="row" style="height: 70%;">
+                <div class="col-md-2"></div>
+                <div id="chatWrap"  class="col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Session de chat iniciada por : {{usuario}}</div>
+                        <div id="chat" class="panel-body"></div>
+                    </div>
+                    
+                    <div>
+                        <form id="send-message" class="input-group" style="text-align:center;margin:0 auto;">
+                        <input id="message" class="form-control input-lg" type="text">
+                        <span class="input-group-btn">
+                            <button class="btn btn-lg btn-primary" type="submit">Send</button>
+                        </span>
+                        </form>
+                    </div>
+                    
+                  
+                </div>
+                
+                
+                
+                <div class="col-md-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Users
+                        </div>
+                        <div id="users" class="panel-body"></div>
+                    </div>
+                </div>
+                
+            </div>
+            
+         </div>
+
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+
+    
+
+            jQuery(function($) {
+
+               var socket = io.connect();
+               var $messageForm = $('#send-message');
+               var $messageBox = $('#message');
+               var $chat = $('#chat');
+               var $users = $('#users');
+           
+               
+               var cad='';
+
+          
+               $messageForm.submit(function(e) {
+                   e.preventDefault();
+                   if($messageBox.val()!='') socket.emit('send message', $messageBox.val());
+                   $messageBox.val('');
+               });
+               
+               socket.on('new message', function(data) {
+                  $chat.append('<b>'+data.nick+":</b> "+data.msg+"<br/>"); 
+                  cad=cad+'<b>'+data.nick+":</b> "+data.msg+"<br/>";
+           
+               });
+
+              
+               socket.on('usernames', function(data) {
+                    var html = '';
+                    for (var username in data) {
+                        html += username + '<br/>';
+                    }
+                    $users.html(html);
+           
+                });
+               
+            });
+            
+        </script>
+
+     

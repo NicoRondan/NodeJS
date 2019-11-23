@@ -1,0 +1,93 @@
+
+    <head>
+        <title>
+            SocketIO-MEAN
+        </title>
+       
+        
+        <script src="https://code.jquery.com/jquery.js"></script>
+        
+       
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+
+       
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        
+    </head>
+    <body>
+    
+        <div class="container">
+        
+            <div class="page-header">
+                <h1>Chat Online - sockeio.js </h1>
+            </div>
+            
+
+      
+
+            <div class="input-group" style="width:300px;text-align:center;margin:0 auto;" >
+                <input id="name" ng-model="usuario" 
+                  class="form-control input-lg" type="text" placeholder="Ingresa tu usuario" />
+                
+              
+                <span class="input-group-btn">
+             
+                        <button class="btn  btn-success btn-lg" type="submit" id="btnNick">OK</button>  
+
+
+                </span>
+            </div>
+
+ 
+
+            <div class="alert fade in alert-danger alert-dismissable" data-dismiss="alert" id="login-error" style="display:none;">
+                <button type="button" class="close" id="closeAlert">×</button>
+                Usuario registrado en el chat, cambie de usuario por favor.
+            </div>
+            
+           
+            
+        </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            jQuery(function($) {
+           
+               var socket = io.connect();
+               var $nickButton = $('#btnNick');
+               var $nickName = $('#name');
+             
+               var $closeAlert = $('#closeAlert');
+     
+             
+               
+               $nickButton.click(function(e) {
+           
+                       //var name=$('#nickname').val();
+                     var nicknew=$nickName.val();
+
+                   socket.emit('new user', nicknew, function(data) {
+                       if(!data) {
+                          $("#login-error").show();
+                       }else{
+                          window.location = '/room/'+nicknew;
+                       }
+                   });
+
+                   
+
+               });
+
+               
+               $closeAlert.click(function(e) {
+                    $("#login-error").hide();
+               });
+               
+             
+               
+            });
+            
+        </script>
+    </body>
+
